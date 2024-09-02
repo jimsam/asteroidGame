@@ -6,4 +6,4 @@ This is very simple implementation of an asteroid game in python.
  * Run pip install -r requirements.txt  (it will install in the environment you have active the pygame)
  * python3 main.py
 
-> Part of BootDev courses.
+> Guided project from `boot.dev`.
