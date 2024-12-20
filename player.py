@@ -7,6 +7,8 @@ from constants import (
     PLAYER_SHOOTING_RATE,
     PLAYER_SPEED,
     PLAYER_TURN_SPEED,
+    SCREEN_HEIGHT,
+    SCREEN_WIDTH,
 )
 from shot import Shot
 
@@ -51,11 +53,13 @@ class Player(CircleShape):
 
     def vertical_move(self, dt):
         forward = pygame.Vector2(0, 1).rotate(self.rotation)
-        self.position += forward * PLAYER_SPEED * dt
+        if self.inside_vertical(forward, dt):
+            self.position += forward * PLAYER_SPEED * dt
 
     def horizontal_move(self, dt):
         side = pygame.Vector2(1, 0).rotate(self.rotation)
-        self.position += side * PLAYER_SPEED * dt
+        if self.inside_horizontal(side, dt):
+            self.position += side * PLAYER_SPEED * dt
 
     def shoot(self):
         if self.shooting_cd > 0:
@@ -65,3 +69,29 @@ class Player(CircleShape):
         bullet.velocity = (
             pygame.Vector2(0, -1).rotate(self.rotation) * PLAYER_SHOOT_SPEED
         )
+
+    def inside_horizontal(self, side, dt):
+        if (
+            (side * PLAYER_SPEED * dt)
+            + self.position
+            - pygame.Vector2(PLAYER_RADIUS, 0)
+        ).x > 0 and (
+            (side * PLAYER_SPEED * dt)
+            + self.position
+            + pygame.Vector2(PLAYER_RADIUS, 0)
+        ).x < SCREEN_WIDTH:
+            return True
+        return False
+
+    def inside_vertical(self, forward, dt):
+        if (
+            (forward * PLAYER_SPEED * dt)
+            + self.position
+            - pygame.Vector2(0, PLAYER_RADIUS)
+        ).y > 0 and (
+            (forward * PLAYER_SPEED * dt)
+            + self.position
+            + pygame.Vector2(0, PLAYER_RADIUS)
+        ).y < SCREEN_HEIGHT:
+            return True
+        return False
